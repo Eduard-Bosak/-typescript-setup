@@ -54,64 +54,42 @@ abstract class  Resource<T> {
     constructor(data: T[]) {
         this.data = data;
     }
-}
-//Получение полного массива объектов.
-//1) Создам производный класс, который наследует от Resource<T>
-class ConcreteResource<T> extends Resource<T> {
-  constructor(data: T[]) {
-    super(data); // Вызов конструктора родительского класса
-  }
 
-  //2) Публичный метод для получения массива
-  public getAllData(): T[] {
-    return this.data;
-  }
-}
-
-//3) Пример использования
-const myData = [
-  { id: 1, name: 'Item 1' },
-  { id: 2, name: 'Item 2' },
-];
-
-const resource = new ConcreteResource(myData);
-
-//4) Теперь можно получить полный массив
-const fullArray = resource.getAllData();
-console.log(fullArray);
-
-//Получение полного массива объектов
-get(): T[] {
-    return this.data;
-}
-
-// Получение одного объекта по ключу и значению.
-
-getOne<K extends keyof T>(key: K, value: T[K]): T | undefined {
- return this.data.find((item) => item[key] === value);
-}
-// Добавление нового объекта в массив
-add(newObj: T): T[] {
-    this.data.push(newObj);
-    return this.data;
-}
-//Обновление объекта по ключу и значению
-fupdate<K extends keyof T>(key: K, value: T[K], partialData: Partial<T>): T | undefined {
-    const item = this.getOne(key, value);
-    if (item) {
-        Object.assign(item, partialData);
-        return item;
+    //Получение полного массива объектов
+    get(): T[] {
+        return this.data;
     }
-    return undefined;
-}
-// Удаление объекта по ключу и значению
- delete<K extends keyof T>(key: K, value: T[K]): T | undefined {
-   const index = this.data.findIndex((item) => item[key] === value);
-   if (index > -1) {
-    const [removedItem] = this.data.splice(index, 1);
-return removedItem;
-  }
-  return undefined; 
+
+    // Получение одного объекта по ключу и значению.
+    getOne<K extends keyof T>(key: K, value: T[K]): T | undefined {
+        return this.data.find((item) => item[key] === value);
+    }
+
+    // Добавление нового объекта в массив
+    add(newObj: T): T[] {
+        this.data.push(newObj);
+        return this.data;
+    }
+
+    //Обновление объекта по ключу и значению
+    update<K extends keyof T>(key: K, value: T[K], partialData: Partial<T>): T | undefined {
+        const item = this.getOne(key, value);
+        if (item) {
+            Object.assign(item, partialData);
+            return item;
+        }
+        return undefined;
+    }
+
+    // Удаление объекта по ключу и значению
+    delete<K extends keyof T>(key: K, value: T[K]): T | undefined {
+        const index = this.data.findIndex((item) => item[key] === value);
+        if (index > -1) {
+            const [removedItem] = this.data.splice(index, 1);
+            return removedItem;
+        }
+        return undefined; 
+    }
 }
 
 
@@ -129,7 +107,7 @@ const users = new UserModel([...mockUserData]);
 
 // Примеры работы с UserModel
 console.log("users.get()", users.get()); //получение всех объектов
-console.log("users.add", users.add({id:6, name: "Олеся Ушинская", phone: "8(901)-225-63-18", email: oy@mail.ru, adress: "г. Рыбинск, улица 9 Мая, 36-85"})); // добавление
+console.log("users.add", users.add({id:6, name: "Олеся Ушинская", phone: "8(901)-225-63-18", email: "oy@mail.ru", adress: "г. Рыбинск, улица 9 Мая, 36-85"})); // добавление
 console.log("users.getOne('id', 4)", users.getOne("id", 4)); //получение по id
 console.log("users.update('id', 4, { name: 'Инокентий'})", users.update("id", 4, { name: "Инокентий"}));// обновление
 console.log("users.delete('id', 4)", users.delete("id", 4)); //удаление
@@ -158,7 +136,7 @@ console.log("orders.get()", orders.get()); // получение всех объ
 console.log("orders.add()", orders.add({ id: 4, price: 400})); //добавление
 console.log("orders.getOne('id', 2)", orders.getOne("id", 2)); //получение по id
 console.log("orders.update('id', 3, { price: 500 })", orders.update("id", 3, {price: 500}));//обновление
-console.log("orders.delete('id, 2)", orders.delete("id", 2)); // удаление
+console.log("orders.delete('id', 2)", orders.delete("id", 2)); // удаление
 console.log('users add',users.add({
     "id":6,
     "name": "Игорь Лисицин",
@@ -171,7 +149,7 @@ console.log('users.getOne()', users.getOne('name', 'Илья Смирнов')); 
 console.log('users.getOne()', users.getOne('phone', '8(910)-156-18-77')); // Получение одного объекта по совпадению phone
 console.log('users.getOne()', users.getOne('id', 40)); // Не существующий id, вернется undefined
 
-console.log('users.updat()', users.update('id', 4, { name: 'Сергей' }));// Изменение поля 'name' в объекте с 'id' равным 4, 
+console.log('users.update()', users.update('id', 4, { name: 'Сергей' }));// Изменение поля 'name' в объекте с 'id' равным 4, 
 // возвращает измененный объект 
 console.log('users.update()', users.update('email','ip@mail.ru', { adress: 'г.Суздаль, проспект Ленина 22-65', phone: '1234567789'}));
 //в объекте с полем 'email','ip@mail.ru' изменяем адрес и номер телефона
